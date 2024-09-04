@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+        iframe {
+            width: 80%;
+            height: 80%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Embedding Google Drive Video -->
+    <iframe src="https://drive.google.com/file/d/18ftua2TBOo-Eu0PBfRt8HQELdKiOr_up/preview" allow="autoplay"></iframe>
+
+    <script>
+        // Redirect to web.whatsapp.com after the video ends
+        const iframe = document.querySelector('iframe');
+        iframe.addEventListener('load', () => {
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+            const checkVideoEnd = setInterval(() => {
+                const video = iframeDocument.querySelector('video');
+                if (video) {
+                    video.addEventListener('ended', () => {
+                        clearInterval(checkVideoEnd);
+                        window.location.href = "https://web.whatsapp.com";
+                    });
+                }
+            }, 1000);
+        });
+    </script>
+
+</body>
+</html>
