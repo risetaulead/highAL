@@ -22,6 +22,19 @@
             height: 100%;
             border: none;
         }
+        .redirect-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -29,26 +42,32 @@
     <!-- Embedding Google Drive Video -->
     <iframe src="https://drive.google.com/file/d/18ftua2TBOo-Eu0PBfRt8HQELdKiOr_up/preview" allow="autoplay"></iframe>
 
+    <!-- Button to redirect to WhatsApp Web, initially hidden -->
+    <button class="redirect-button" onclick="window.location.href='https://web.whatsapp.com'">WhatsApp</button>
+
     <script>
-        // Redirect to web.whatsapp.com after the video ends
+        // Handle showing the button after the video ends
         const iframe = document.querySelector('iframe');
+        const redirectButton = document.querySelector('.redirect-button');
+        
         iframe.addEventListener('load', () => {
             const iframeWindow = iframe.contentWindow;
 
             const checkVideoEnd = setInterval(() => {
                 const video = iframeWindow.document.querySelector('video');
                 if (video) {
-                    // Listen for time updates and the ended event
+                    // Listen for the ended event
+                    video.addEventListener('ended', () => {
+                        clearInterval(checkVideoEnd);
+                        redirectButton.style.display = 'block'; // Show the button
+                    });
+
+                    // Also show the button if the user skips to the end
                     video.addEventListener('timeupdate', () => {
                         if (video.currentTime >= video.duration - 1) {
                             clearInterval(checkVideoEnd);
-                            window.location.href = "https://web.whatsapp.com";
+                            redirectButton.style.display = 'block'; // Show the button
                         }
-                    });
-
-                    video.addEventListener('ended', () => {
-                        clearInterval(checkVideoEnd);
-                        window.location.href = "https://web.whatsapp.com";
                     });
                 }
             }, 1000);
